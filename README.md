@@ -1,2 +1,4 @@
-# stars
-Initial Stars Stencil for Brown CS32
+# README
+
+## Stars
+**TODO: Fill out this section!**
