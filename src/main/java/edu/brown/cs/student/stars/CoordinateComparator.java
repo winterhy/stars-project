@@ -11,7 +11,7 @@ public class CoordinateComparator implements Comparator<List<Number>> {
   }
 
   public int compare(List<Number> a, List<Number> b) {
-    // depths will not be greater or equal to list length
+    // depths will NOT be greater or equal to list length
     if (a.get(coordinate).doubleValue() > b.get(coordinate).doubleValue()) {
       return 1;
     } else if (a.get(coordinate).doubleValue() < b.get(coordinate).doubleValue()) {

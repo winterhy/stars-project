@@ -7,23 +7,21 @@ import java.util.List;
  */
 public class Star {
 
-    public Number ID;
-    public String Name;
-    public List<Number> Coordinates;
+  private Integer id;
+  private String name;
+  private List<Number> coordinates;
 
-    /**
-     * Takes a Number, a String, and a List of Numbers
-     * and constructs a Star object
-     *
-     * @param ID
-     * @param Name
-     * @param Coordinates
-     */
-    public Star(Number ID, String Name, List<Number> Coordinates) {
-        this.ID = ID;
-        this.Name = Name;
-        this.Coordinates = Coordinates;
-    }
-
-
+  /**
+   * Takes a Number, a String, and a List of Numbers
+   * and constructs a Star object.
+   *
+   * @param id
+   * @param name
+   * @param coordinates
+   */
+  public Star(Integer id, String name, List<Number> coordinates) {
+    this.id = id;
+    this.name = name;
+    this.coordinates = coordinates;
+  }
 }
