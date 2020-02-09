@@ -9,33 +9,27 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 public class CoordinateComparatorTest {
-  private CoordinateComparator _firstCoordinateComparator;
-  private CoordinateComparator _secondCoordinateComparator;
-  private CoordinateComparator _thirdCoordinateComparator;
-  private List<Number> zeroes;
-  private List<Number> genericListOne;
-  private List<Number> genericListTwo;
+  private CoordinateComparator<Star> _firstCoordinateComparator;
+  private CoordinateComparator<Star> _secondCoordinateComparator;
+  private CoordinateComparator<Star> _thirdCoordinateComparator;
+  private Star zeroes;
+  private Star genericListOne;
+  private Star genericListTwo;
 
   /**
    * Sets up the CoordinateComparator.
    */
   @Before
   public void setUp() {
-    _firstCoordinateComparator = new CoordinateComparator(0);
-    _secondCoordinateComparator = new CoordinateComparator(1);
-    _thirdCoordinateComparator = new CoordinateComparator(2);
-    zeroes = new ArrayList<Number>();
-    zeroes.add(0);
-    zeroes.add(0);
-    zeroes.add(0);
-    genericListOne = new ArrayList<Number>();
-    genericListOne.add(1);
-    genericListOne.add(-1);
-    genericListOne.add(-2.999);
-    genericListTwo = new ArrayList<Number>();
-    genericListTwo.add(1);
-    genericListTwo.add(2);
-    genericListTwo.add(-3);
+    _firstCoordinateComparator = new CoordinateComparator<>(0);
+    _secondCoordinateComparator = new CoordinateComparator<>(1);
+    _thirdCoordinateComparator = new CoordinateComparator<>(2);
+    List<Number> zeroList = new ArrayList<>(List.of(0,0,0));
+    zeroes = new Star(0,"", zeroList);
+    List<Number> oneList = new ArrayList<>(List.of(1,-1,-2.999));
+    genericListOne = new Star(1, "", oneList);
+    List<Number> twoList = new ArrayList<>(List.of(1,2,-3));
+    genericListTwo = new Star(2, "", twoList);
   }
 
   /**

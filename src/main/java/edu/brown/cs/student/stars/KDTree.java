@@ -2,64 +2,66 @@ package edu.brown.cs.student.stars;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.HashMap;
-import edu.brown.cs.student.stars.Parser;
+
 /**
  * K-D Tree data structure for organizing coordinates.
+ *
+ * @param <T> An object that has coordinates
  */
-public class KDTree {
-  private int root;
-  private KDTree left;
-  private KDTree right;
+public class KDTree<T extends HasCoordinates> {
+  public T root;
+  public KDTree<T> left;
+  public KDTree<T> right;
 
   /**
-   * Constructor class. Takes in a list of integers which
-   * represents the ID's of generic objects. Also takes
+   * Constructor class. Takes in a list of objects that
+   * implements HasCoordinates. Also takes
    * in a depth parameter that determine's the tree's
-   * depth.
+   * initial depth.
    *
-   * @param l
-   * @param dimension
+   * @param l list of objects that has coordinates
+   * @param depth keep track of the depth of the tree
    */
-  public KDTree(List<Integer> l, int dimension, int depth) {
+  public KDTree(List<T> l, int depth) {
     // depth 0 is the first coordinate
 
-    // TODO: Is there a way to fix?
+    // TODO: Is there a way to fix? About empty lists?
     //if (l.isEmpty()) {
 //      root = Integer.parseInt(null);
 //      left = null;
 //      right = null;
-    if (l.size() == 1) {
+    int size = l.size();
+    if (size == 1) {
       root = l.get(0);
       left = null;
       right = null;
     } else {
-    // TODO: Change coordinate comparator and its tests to acommodate hashmaps
-      // depth is not what it seems
-      int coordinate =  dimension;
-      List<Integer> sorted = Collections.sort(l, CoordinateComparator(coordinate));
+      // depth starts from 0
+      // dimension is 3 for the stars project
+      int dimension = l.get(0).getCoordinates().size();
+      int coordinate = depth % dimension;
+      Collections.sort(l, new CoordinateComparator<T>(coordinate));
       int medianIndex;
-      if (sorted.size() % 2 == 0) {
-        // this would get the latter of the two medians in an even list
-        // TODO: Test!!!!!!!!
-        medianIndex = sorted.size() / 2;
+      if (size % 2 == 0) {
+        // This would get the latter of the two medians in an even elt list
+        // TODO: Test??
+        medianIndex = size / 2;
       } else {
-        medianIndex = (sorted.size() - 1) / 2;
+        // This would get the median in an odd elements list
+        medianIndex = (size - 1) / 2;
       }
-    // No empty list accepted, will catch in parser / stars command
-    // Could change
-      root = sorted.get(medianIndex);
-      List<Integer> leftList = sorted.subList(0, medianIndex - 1);
-      List<Integer> rightList = sorted.subList(medianIndex + 1, 0);
+      root = l.get(medianIndex);
+      List<T> leftList = l.subList(0, medianIndex);
+      List<T> rightList = l.subList(medianIndex + 1, size);
       if (leftList.isEmpty()) {
         left = null;
-        right = new KDTree(rightList, dimension, depth+1);
+        right = new KDTree<>(rightList, depth + 1);
       } else if (rightList.isEmpty()) {
-        left = new KDTree(leftList, dimension, depth+1);
+        left = new KDTree<>(leftList, depth + 1);
         right = null;
       } else {
-        left = new KDTree(leftList, dimension, depth+1);
-        right = new KDTree(rightList, dimension, depth+1;
+        left = new KDTree<>(leftList, depth + 1);
+        right = new KDTree<>(rightList, depth + 1);
       }
     }
 
