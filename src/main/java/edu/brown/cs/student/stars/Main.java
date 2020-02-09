@@ -36,6 +36,7 @@ public final class Main {
    */
   public static void main(String[] args) {
     new Main(args).run();
+
   }
 
   private String[] args;
@@ -57,6 +58,13 @@ public final class Main {
     }
 
     // TODO: Process commands in a REPL
+    REPL running = new REPL();
+    CommandManager manager = new CommandManager();
+    Universe universe = new Universe();
+    universe.installCommands(manager);
+    running.read(manager);
+
+    // or maybe construct the repl using the command manager?
   }
 
   private static FreeMarkerEngine createEngine() {
