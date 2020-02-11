@@ -67,4 +67,11 @@ public class KDTree<T extends HasCoordinates> {
 
   }
 
+  /**
+   * Main neighbors method
+   */
+  public List<T> neighbors() {
+    return null;
+  }
+
 }
