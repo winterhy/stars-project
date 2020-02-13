@@ -29,4 +29,23 @@ public class Star implements HasCoordinates {
   public List<Number> getCoordinates() {
     return coordinates;
   }
+
+
+  /**
+   * Supporting method to get the euclidean distance squared between two lists
+   * of numbers. Takes two equal sized lists.
+   *
+   * @param targetPoint list of numbers that represent a coordinate
+   * @return the euclidean distance
+   */
+  @Override
+  public double euclideanDistance(List<Number> targetPoint) {
+    double squareSum = 0.00;
+    for (int i = 0; i < targetPoint.size(); i++) {
+      double difference = coordinates.get(i).doubleValue() - targetPoint.get(i).doubleValue();
+      squareSum = squareSum + Math.pow(difference, 2.00);
+    }
+    // No need to square root because it is slow and this is used for compare
+    return squareSum;
+  }
 }

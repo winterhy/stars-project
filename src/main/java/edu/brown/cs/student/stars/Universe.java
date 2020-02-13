@@ -36,6 +36,8 @@ public class Universe {
     @Override
     public void execute(List<String> tokens) {
 
+      // Remember if it's name, no itself
+      // If it is coordinates, can include itself
       System.out.println("Neighbors");
     }
 

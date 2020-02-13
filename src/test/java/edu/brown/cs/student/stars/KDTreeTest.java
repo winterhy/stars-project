@@ -1,20 +1,23 @@
 package edu.brown.cs.student.stars;
+import org.checkerframework.checker.units.qual.A;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.HashSet;
 
 import static org.junit.Assert.*;
 
 public class KDTreeTest {
   private KDTree<Star> oneNodeTree;
   private KDTree<Star> twoNodeLeftTree;
-  private KDTree<Star> twoNodeRightTree;
   private KDTree<Star> threeNodeEvenTree;
   private KDTree<Star> twoNodeSameCoordinates;
-  private KDTree<Star> depthFourA;
+  private KDTree<Star> depthThreeA;
+  private Star origin;
+  private Star one;
   // Should be arbitrary in parent and child
 
   /**
@@ -22,7 +25,22 @@ public class KDTreeTest {
    */
   @Before
   public void setUp() {
+    origin = new Star(0, "Sol",
+        new ArrayList<>(List.of(0,0,0)));
+    one = new Star(1, "Star One",
+        new ArrayList<>(List.of(1,0,0)));
+    oneNodeTree = new KDTree<>(new ArrayList<>(List.of(origin)),0);
+    twoNodeLeftTree = new KDTree<>(
+        new ArrayList<>(List.of(one, origin)), 0);
+  }
 
+  /**
+   * Resets every KDtree.
+   */
+  @After
+  public void tearDown() {
+    oneNodeTree = null;
+    twoNodeLeftTree = null;
   }
 
 
@@ -32,12 +50,10 @@ public class KDTreeTest {
   @Test
   public void testOneNodeTree() {
     setUp();
-    Star origin = new Star(0, "Sol",
-        new ArrayList<>(List.of(0,0,0)));
-    oneNodeTree = new KDTree<>(new ArrayList<>(List.of(origin)),0);
     assertEquals(oneNodeTree.root, origin);
     assertNull(oneNodeTree.left);
     assertNull(oneNodeTree.right);
+    tearDown();
   }
 
   /**
@@ -45,24 +61,14 @@ public class KDTreeTest {
    */
   @Test
   public void testTwoNodeLeftTree() {
-    Star origin = new Star(0, "Sol",
-        new ArrayList<>(List.of(0,0,0)));
-    Star one = new Star(1, "Star One",
-        new ArrayList<>(List.of(1,0,0)));
-    twoNodeLeftTree = new KDTree<>(
-        new ArrayList<>(List.of(one, origin)), 0);
+    setUp();
     assertEquals(twoNodeLeftTree.root, one);
     assertEquals(twoNodeLeftTree.left.root, origin);
     assertNull(twoNodeLeftTree.right);
+    tearDown();
   }
 
-  /**
-   * Test twoNodeRightTree.
-   */
-  @Test
-  public void testTwoNodeRightTree() {
-  // can't exist
-  }
+
 
   /**
   * Test threeNodeEvenTree.
@@ -108,19 +114,60 @@ public class KDTreeTest {
         new ArrayList<>(List.of(-2,1,4)));
     Star thirdRightLeftLeft =  new Star(8, "",
         new ArrayList<>(List.of(1,1.2,0)));
-    depthFourA = new KDTree<>(
+    depthThreeA = new KDTree<>(
         new ArrayList<>(List.of(
             origin, firstLeft, firstRight, secondLeftLeft,
             secondLeftRight, secondRightLeft, secondRightRight,
             thirdLeftLeftLeft, thirdRightLeftLeft)), 0);
-    assertEquals(depthFourA.root, origin);
-    assertEquals(depthFourA.left.root, firstLeft);
-    assertEquals(depthFourA.right.root, firstRight);
-    assertEquals(depthFourA.left.left.root, secondLeftLeft);
-    assertEquals(depthFourA.left.right.root, secondLeftRight);
-    assertEquals(depthFourA.right.left.root, secondRightLeft);
-    assertEquals(depthFourA.right.right.root, secondRightRight);
-    assertEquals(depthFourA.left.left.left.root, thirdLeftLeftLeft);
-    assertEquals(depthFourA.right.left.left.root, thirdRightLeftLeft);
+    assertEquals(depthThreeA.root, origin);
+    assertEquals(depthThreeA.left.root, firstLeft);
+    assertEquals(depthThreeA.right.root, firstRight);
+    assertEquals(depthThreeA.left.left.root, secondLeftLeft);
+    assertEquals(depthThreeA.left.right.root, secondLeftRight);
+    assertEquals(depthThreeA.right.left.root, secondRightLeft);
+    assertEquals(depthThreeA.right.right.root, secondRightRight);
+    assertEquals(depthThreeA.left.left.left.root, thirdLeftLeftLeft);
+    assertEquals(depthThreeA.right.left.left.root, thirdRightLeftLeft);
+  }
+
+
+  /**
+   * Test neighbors method.
+   */
+  @Test
+  public void testNeighbors() {
+    setUp();
+
+    // One node tree case:
+    assertNull(oneNodeTree.neighbors(0,
+        new ArrayList<>(List.of(0,0,0)),
+        new ArrayList<>()));
+    assertEquals(oneNodeTree.neighbors(1,
+        new ArrayList<>(List.of(0,0,0)),
+        new ArrayList<>()), new ArrayList<>(List.of(origin)));
+    assertEquals(oneNodeTree.neighbors(1,
+        new ArrayList<>(List.of(99,99,-99)),
+        new ArrayList<>()), new ArrayList<>(List.of(origin)));
+
+    // Two node tree case:
+    // Target point equals first root
+    assertEquals(twoNodeLeftTree.neighbors(1,
+        new ArrayList<>(List.of(1,0,0)),
+        new ArrayList<>()), new ArrayList<>(List.of(one)));
+
+    // Target point equals left child
+    assertEquals(twoNodeLeftTree.neighbors(1,
+       new ArrayList<>(List.of(0,0,0)),
+        new ArrayList<>()), new ArrayList<>(List.of(origin)));
+
+    assertEquals(new HashSet<>(twoNodeLeftTree.neighbors(2,
+        new ArrayList<>(List.of(1,0,0)),
+        new ArrayList<>())),
+        new HashSet<>(new ArrayList<>(List.of(one, origin))));
+    assertEquals(new HashSet<>(twoNodeLeftTree.neighbors(2,
+        new ArrayList<>(List.of(0,0,0)),
+        new ArrayList<>())),
+        new HashSet<>(new ArrayList<>(List.of(one, origin))));
+    tearDown();
   }
 }

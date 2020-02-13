@@ -14,5 +14,6 @@ public interface HasCoordinates {
    * @return a list of numbers
    */
   List<Number> getCoordinates();
+  double euclideanDistance(List<Number> targetPoint);
 }
 
