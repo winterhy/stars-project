@@ -40,9 +40,7 @@ public class CSVParser {
         System.err.println("ERROR: Empty file.");
       } else {
         String[] arrayOfFirstLine = firstLine.split(",");
-        System.out.println("Arrayoffirstline: " + arrayOfFirstLine);
         List<String> firstRow = Arrays.asList(arrayOfFirstLine);
-        System.out.println("firstRow: " + firstRow);
         parsed = new ArrayList<>();
         parsed.add(firstRow);
         String line;

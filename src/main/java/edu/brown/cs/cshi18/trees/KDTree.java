@@ -43,6 +43,10 @@ public class KDTree<T extends HasCoordinates> {
    * @param depth keep track of the depth of the tree, init: 0
    */
   public KDTree(List<T> l, int depth) {
+    this.setUp(l, depth);
+  }
+
+  public void setUp(List<T> l, int depth) {
     int size = l.size();
     if (size == 0) {
       // This error will not be revealed to user
@@ -82,7 +86,6 @@ public class KDTree<T extends HasCoordinates> {
         right = new KDTree<>(rightList, depth + 1);
       }
     }
-
   }
 
   /**
@@ -90,22 +93,19 @@ public class KDTree<T extends HasCoordinates> {
    *
    * @param k number of neighbors to search
    * @param targetPoint coordinates of the target point
-   * @return a queue of k nearest neighbors including the T on the target point
+   * @return a list of k nearest neighbors including the T on the target point
    */
   public List<T> neighbors(int k, List<Number> targetPoint) {
     if (k == 0) {
-      return null;
+      return new ArrayList<>();
     } else {
-      PriorityQueue<T> queue = new PriorityQueue<>(
-          k, new FurthestFirstDistanceComparator<>(targetPoint));
+
+      PriorityQueue<T> queue = new PriorityQueue<>(k, new FurthestFirstDistanceComparator<>(targetPoint));
       // outputs queue from furthest to nearest
       neighborsQueue(k, targetPoint, queue);
-      PriorityQueue<T> nearestFirstQueue = new PriorityQueue<>(
-          new ClosestFirstDistanceComparator<>(targetPoint));
-
-      nearestFirstQueue.addAll(queue);
-      Collections.sort(nearestFirstQueue, );
-      return nearestFirstQueue;
+      List<T> listOfNeighbors = new ArrayList<>(queue);
+      Collections.sort(listOfNeighbors, new ClosestFirstDistanceComparator<>(targetPoint));
+      return listOfNeighbors;
     }
   }
 
@@ -119,13 +119,13 @@ public class KDTree<T extends HasCoordinates> {
   public void neighborsQueue(int k, List<Number> targetPoint, PriorityQueue<T> queue) {
     if (queue.size() < k) {
       queue.add(root);
-      System.out.println("Queue: " + queue);
+      //System.out.println("Queue: " + queue);
     } else {
       queue.add(root);
-      System.out.println("Queue before remove: " + queue);
+      //System.out.println("Queue before remove: " + queue);
       // removes the furthest neighbor at the head of the queue
       queue.remove();
-      System.out.println("Queue after remove: " + queue);
+      //System.out.println("Queue after remove: " + queue);
     }
     //List<T> updated = new ArrayList<>(queue);
     //System.out.println("Updated List first: " + updated);
@@ -162,7 +162,9 @@ public class KDTree<T extends HasCoordinates> {
         new ClosestFirstDistanceComparator<>(targetPoint));
     // outputs queue from nearest to furthest
     radiusQueue(r, targetPoint, queue);
-    return queue;
+    List<T> listOfNeighbors = new ArrayList<>(queue);
+    Collections.sort(listOfNeighbors, new ClosestFirstDistanceComparator<>(targetPoint));
+    return listOfNeighbors;
   }
 
   public void radiusQueue(double r, List<Number> targetPoint, PriorityQueue<T> queue) {

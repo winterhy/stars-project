@@ -140,8 +140,8 @@ public class KDTreeTest {
     setUp();
 
     // One node tree case:
-    assertNull(oneNodeTree.neighbors(0,
-        new ArrayList<>(List.of(0,0,0))));
+    assertEquals(oneNodeTree.neighbors(0,
+        new ArrayList<>(List.of(0,0,0))), new ArrayList<>());
     assertEquals(oneNodeTree.neighbors(1,
         new ArrayList<>(List.of(0,0,0))), new ArrayList<>(List.of(origin)));
     assertEquals(oneNodeTree.neighbors(1,
