@@ -8,10 +8,20 @@ import java.util.List;
  * This is a star object. Includes ID, Name, and Coordinates
  */
 public class Star implements HasCoordinates {
-
   private Integer id;
   private String name;
   private List<Number> coordinates;
+  public int getId() {
+    return id;
+  }
+  public String getName() {
+    return name;
+  }
+
+  @Override
+  public List<Number> getCoordinates() {
+    return coordinates;
+  }
 
   /**
    * Takes a Number, a String, and a List of Numbers
@@ -26,13 +36,6 @@ public class Star implements HasCoordinates {
     this.name = name;
     this.coordinates = coordinates;
   }
-
-  @Override
-  public List<Number> getCoordinates() {
-    return coordinates;
-  }
-
-
   /**
    * Supporting method to get the euclidean distance squared between two lists
    * of numbers. Takes two equal sized lists.

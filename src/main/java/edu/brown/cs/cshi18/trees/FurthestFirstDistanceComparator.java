@@ -12,7 +12,7 @@ import java.util.List;
 public class FurthestFirstDistanceComparator<T extends HasCoordinates> implements Comparator<T> {
   private List<Number> targetPoint;
 
-  FurthestFirstDistanceComparator(List<Number> targetPoint) {
+  public FurthestFirstDistanceComparator(List<Number> targetPoint) {
     this.targetPoint = targetPoint;
   }
 

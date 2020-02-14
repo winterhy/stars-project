@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.PriorityQueue;
+import java.util.Queue;
 
 /**
  * K-D Tree data structure for organizing coordinates.
@@ -11,10 +12,26 @@ import java.util.PriorityQueue;
  * @param <T> An object that has coordinates
  */
 public class KDTree<T extends HasCoordinates> {
-  public T root;
-  public KDTree<T> left;
-  public KDTree<T> right;
-  public int depth;
+  private T root;
+  private KDTree<T> left;
+  private KDTree<T> right;
+  private int depth;
+
+  public T getRoot() {
+    return root;
+  }
+
+  public KDTree<T> getLeft() {
+    return left;
+  }
+
+  public KDTree<T> getRight() {
+    return right;
+  }
+
+  public int getDepth() {
+    return depth;
+  }
 
   /**
    * Constructor class. Takes in a list of objects that
@@ -73,17 +90,22 @@ public class KDTree<T extends HasCoordinates> {
    *
    * @param k number of neighbors to search
    * @param targetPoint coordinates of the target point
-   * @return a list of k nearest neighbors including the T on the target point
+   * @return a queue of k nearest neighbors including the T on the target point
    */
   public List<T> neighbors(int k, List<Number> targetPoint) {
     if (k == 0) {
       return null;
     } else {
-      PriorityQueue<T> queue = new PriorityQueue<T>(
+      PriorityQueue<T> queue = new PriorityQueue<>(
           k, new FurthestFirstDistanceComparator<>(targetPoint));
       // outputs queue from furthest to nearest
       neighborsQueue(k, targetPoint, queue);
-      return new ArrayList<>(queue);
+      PriorityQueue<T> nearestFirstQueue = new PriorityQueue<>(
+          new ClosestFirstDistanceComparator<>(targetPoint));
+
+      nearestFirstQueue.addAll(queue);
+      Collections.sort(nearestFirstQueue, );
+      return nearestFirstQueue;
     }
   }
 
@@ -140,7 +162,7 @@ public class KDTree<T extends HasCoordinates> {
         new ClosestFirstDistanceComparator<>(targetPoint));
     // outputs queue from nearest to furthest
     radiusQueue(r, targetPoint, queue);
-    return new ArrayList<>(queue);
+    return queue;
   }
 
   public void radiusQueue(double r, List<Number> targetPoint, PriorityQueue<T> queue) {

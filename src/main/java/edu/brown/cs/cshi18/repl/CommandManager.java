@@ -76,7 +76,7 @@ public class CommandManager {
       if (Pattern.matches(elt, line)) {
         String[] los = line.split("\\s");
         List<String> list = Arrays.asList(los);
-        commandMap.get(elt).execute(list.subList(1, list.size() - 1));
+        commandMap.get(elt).execute(list.subList(1, list.size()));
         foundCommand = true;
       }
     }

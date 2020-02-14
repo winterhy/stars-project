@@ -5,7 +5,7 @@ import java.util.Comparator;
 public class CoordinateComparator<T extends HasCoordinates> implements Comparator<T> {
   private int coordinate;
 
-  CoordinateComparator(int coordinate) {
+  public CoordinateComparator(int coordinate) {
     this.coordinate = coordinate;
   }
 

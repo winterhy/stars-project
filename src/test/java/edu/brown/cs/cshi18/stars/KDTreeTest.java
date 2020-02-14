@@ -7,6 +7,7 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.HashSet;
+import java.util.PriorityQueue;
 
 import static org.junit.Assert.*;
 
@@ -50,9 +51,9 @@ public class KDTreeTest {
   @Test
   public void testOneNodeTree() {
     setUp();
-    assertEquals(oneNodeTree.root, origin);
-    assertNull(oneNodeTree.left);
-    assertNull(oneNodeTree.right);
+    assertEquals(oneNodeTree.getRoot(), origin);
+    assertNull(oneNodeTree.getLeft());
+    assertNull(oneNodeTree.getRight());
     tearDown();
   }
 
@@ -62,9 +63,9 @@ public class KDTreeTest {
   @Test
   public void testTwoNodeLeftTree() {
     setUp();
-    assertEquals(twoNodeLeftTree.root, one);
-    assertEquals(twoNodeLeftTree.left.root, origin);
-    assertNull(twoNodeLeftTree.right);
+    assertEquals(twoNodeLeftTree.getRoot(), one);
+    assertEquals(twoNodeLeftTree.getLeft().getRoot(), origin);
+    assertNull(twoNodeLeftTree.getRight());
     tearDown();
   }
 
@@ -85,9 +86,9 @@ public class KDTreeTest {
         new ArrayList<>(List.of(1,0,0)));
     threeNodeEvenTree = new KDTree<>(
         new ArrayList<>(List.of(origin, one, two)), 0);
-    assertEquals(threeNodeEvenTree.root, one);
-    assertEquals(threeNodeEvenTree.left.root, origin);
-    assertEquals(threeNodeEvenTree.right.root, two);
+    assertEquals(threeNodeEvenTree.getRoot(), one);
+    assertEquals(threeNodeEvenTree.getLeft().getRoot(), origin);
+    assertEquals(threeNodeEvenTree.getRight().getRoot(), two);
   }
 
   /**
@@ -119,15 +120,15 @@ public class KDTreeTest {
             origin, firstLeft, firstRight, secondLeftLeft,
             secondLeftRight, secondRightLeft, secondRightRight,
             thirdLeftLeftLeft, thirdRightLeftLeft)), 0);
-    assertEquals(depthThreeA.root, origin);
-    assertEquals(depthThreeA.left.root, firstLeft);
-    assertEquals(depthThreeA.right.root, firstRight);
-    assertEquals(depthThreeA.left.left.root, secondLeftLeft);
-    assertEquals(depthThreeA.left.right.root, secondLeftRight);
-    assertEquals(depthThreeA.right.left.root, secondRightLeft);
-    assertEquals(depthThreeA.right.right.root, secondRightRight);
-    assertEquals(depthThreeA.left.left.left.root, thirdLeftLeftLeft);
-    assertEquals(depthThreeA.right.left.left.root, thirdRightLeftLeft);
+    assertEquals(depthThreeA.getRoot(), origin);
+    assertEquals(depthThreeA.getLeft().getRoot(), firstLeft);
+    assertEquals(depthThreeA.getRight().getRoot(), firstRight);
+    assertEquals(depthThreeA.getLeft().getLeft().getRoot(), secondLeftLeft);
+    assertEquals(depthThreeA.getLeft().getRight().getRoot(), secondLeftRight);
+    assertEquals(depthThreeA.getRight().getLeft().getRoot(), secondRightLeft);
+    assertEquals(depthThreeA.getRight().getRight().getRoot(), secondRightRight);
+    assertEquals(depthThreeA.getLeft().getLeft().getLeft().getRoot(), thirdLeftLeftLeft);
+    assertEquals(depthThreeA.getRight().getLeft().getLeft().getRoot(), thirdRightLeftLeft);
   }
 
 

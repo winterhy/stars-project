@@ -13,7 +13,7 @@ public class ClosestFirstDistanceComparator<T extends HasCoordinates>
     implements Comparator<T> {
   private List<Number> targetPoint;
 
-  ClosestFirstDistanceComparator(List<Number> targetPoint) {
+  public ClosestFirstDistanceComparator(List<Number> targetPoint) {
     this.targetPoint = targetPoint;
   }
 

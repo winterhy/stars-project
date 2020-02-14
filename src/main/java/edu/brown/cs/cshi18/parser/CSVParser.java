@@ -1,8 +1,12 @@
 package edu.brown.cs.cshi18.parser;
 
+import org.checkerframework.checker.units.qual.A;
+
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.io.IOException;
@@ -13,27 +17,33 @@ import java.io.IOException;
  * Each list of strings is then added to a list field.
  */
 public class CSVParser {
-  public List<List<String>> parsed;
+  private List<List<String>> parsed;
 
+  public List<List<String>> getParsed() {
+    return parsed;
+  }
 
   /**
    * Takes a string of csv file and parse each row  into a list of strings.
    * Then adds the list of strings into a list field.
    *
-   * @param file a string that represents the path to file and file
+   * @param fileName a string that represents the path to file and file
   */
-  public CSVParser(String file) {
+  public CSVParser(String fileName) {
     try {
-      File f = new File(file);
+      File csvFile = new File(fileName);
       BufferedReader reader =
-          new BufferedReader(new FileReader(file));
+          new BufferedReader(new FileReader(csvFile));
       boolean sameNumberOfColumns = false;
       String firstLine = reader.readLine();
       if (firstLine == null) {
         System.err.println("ERROR: Empty file.");
       } else {
         String[] arrayOfFirstLine = firstLine.split(",");
+        System.out.println("Arrayoffirstline: " + arrayOfFirstLine);
         List<String> firstRow = Arrays.asList(arrayOfFirstLine);
+        System.out.println("firstRow: " + firstRow);
+        parsed = new ArrayList<>();
         parsed.add(firstRow);
         String line;
         while ((line = reader.readLine()) != null) {

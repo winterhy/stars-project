@@ -1,20 +1,20 @@
 package edu.brown.cs.cshi18.stars;
 
+import edu.brown.cs.cshi18.parser.CSVParser;
 import edu.brown.cs.cshi18.repl.CommandManager;
 import edu.brown.cs.cshi18.trees.HasCoordinates;
 import edu.brown.cs.cshi18.trees.KDTree;
-import edu.brown.cs.cshi18.stars.Star;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Queue;
 import java.util.regex.Pattern;
 
-public class Universe<Star> implements CommandManager.Install {
-  public KDTree<HasCoordinates> tree;
-  public HashMap<Integer, Star> starHashMap = new HashMap<>();
-  public HashMap<String, edu.brown.cs.cshi18.stars.Star> nameHashMap = new HashMap<>();
+public class Universe implements CommandManager.Install {
+  private KDTree<Star> tree;
+  private HashMap<String, Star> nameHashMap = new HashMap<>();
 
   /**
    * Method from the install interface.
@@ -40,48 +40,46 @@ public class Universe<Star> implements CommandManager.Install {
   class StarsCommand implements CommandManager.Command {
     @Override
     public void execute(List<String> tokens) {
-      // calls parser here
-      String line = tokens.get(0);
+      String fileName = tokens.get(0);
       String pattern = ".*\\.csv";
-      if (Pattern.matches(line, pattern)) {
-        System.out.println("Read n stars from <filename>");
-        //Parser parser = new Parser(line);
-
-
-
-
-
-        String header = reader.readLine();
-        if (header == null) {
-          System.err.println("ERROR: Empty file");
-        } else {
-          String headerPattern = "StarID,ProperName,X,Y,Z";
-          if (Pattern.matches(headerPattern, header)) {
-            while ((line = reader.readLine()) != null) {
-              String[] los = line.split(",");
-              List<String> list = Arrays.asList(los);
-              List<Number> coordinates = new ArrayList<>();
-              for (int i = 0; i < 3; i++) {
-                coordinates.add(i, Double.parseDouble(list.get(i + 2)));
+      if (Pattern.matches(pattern, fileName)) {
+        CSVParser parser = new CSVParser(fileName);
+        List<List<String>> content = parser.getParsed();
+        if (content != null) {
+          List<String> headerPattern = new ArrayList<>(List.of("StarID",
+              "ProperName", "X", "Y", "Z"));
+          if (!content.get(0).equals(headerPattern)) {
+            System.err.println("ERROR: Malformed header in csv.");
+          } else if (content.size() < 2) {
+            System.err.println("ERROR: 0 stars in csv file.");
+          } else {
+            int numberOfStars = content.size() - 1;
+            System.out.println("Read " + numberOfStars + " stars from " + fileName);
+            List<Star> listOfStars = new ArrayList<>();
+            for (int i = 1; i < content.size(); i++) {
+              List<String> row = content.get(i);
+              String joinedRow = String.join(",", row);
+              String rowPattern = "(\\d+),\"(.*)\"(?:,(-?\\d+(\\.\\d+)?)){3}";
+              if (!Pattern.matches(rowPattern, joinedRow)) {
+                System.err.println("ERROR: Malformed data in csv");
               }
-              edu.brown.cs.cshi18.stars.Star newStar = new edu.brown.cs.cshi18.stars.Star(Integer.parseInt(list.get(0)), list.get(1),
-                  coordinates);
+              int id = Integer.parseInt(row.get(0));
+              String name = row.get(1);
+              List<Number> coordinates = new ArrayList<>();
+              for (int j = 0; j < 3; j++) {
+                coordinates.add(j, Double.parseDouble(row.get(j + 2)));
+              }
+              Star newStar = new Star(id, name, coordinates);
+              listOfStars.add(newStar);
               // This puts stars with names into a HashMap with a key of names
               // and a value of stars. Those without names will not be put in.
-              if (list.get(1) != "") {
-                nameHashMap.put(list.get(1), newStar);
+              if (!name.equals("")) {
+                nameHashMap.put(name, newStar);
               }
-              starHashMap.put(list.get(0), newStar);
             }
-          } else {
-            System.err.println("ERROR: Malformed header.");
+            tree = new KDTree<>(listOfStars, 0);
           }
         }
-
-
-
-
-
       } else {
         System.out.println("ERROR: Filename must end in \".csv\"");
       }
@@ -93,22 +91,60 @@ public class Universe<Star> implements CommandManager.Install {
     @Override
     public void execute(List<String> tokens) {
       // call neighbors on KDTree
-
-      // Remember if it's name, no itself
-      // If it is coordinates, can include itself
-      // to solve this, create two KDTrees?? One with name, one without
-      // actually nah, just pass in k+1 for those with names, and delete it after
-      System.out.println("Neighbors");
+      // Will be an integer because of regexp checking
+      int k = Integer.parseInt(tokens.get(0));
+      // If it is an integer and a string
+      if (tokens.size() == 2) {
+        Star centerStar = nameHashMap.get(tokens.get(1));
+        List<Number> starCoordinates = centerStar.getCoordinates();
+        Queue<Star> nameNeighbors = tree.neighbors(k + 1, starCoordinates);
+        nameNeighbors.remove();
+        if (nameNeighbors.size() != 0) {
+          for (Star element : nameNeighbors) {
+            System.out.println(element.getId());
+          }
+        }
+      // If it is an integer followed by three doubles
+      } else if (tokens.size() == 4) {
+        List<Number> targetPoint = new ArrayList<>();
+        for (int i = 0; i < 3; i++) {
+          targetPoint.add(i, Double.parseDouble(tokens.get(i + 1)));
+        }
+        Queue<Star> coordinateNeighbors = tree.neighbors(k, targetPoint);
+        for (Star element : coordinateNeighbors) {
+          System.out.println(element.getId());
+        }
+      }
     }
-
   }
 
   class RadiusCommand implements CommandManager.Command {
 
     @Override
     public void execute(List<String> tokens) {
-
-      System.out.println("Radius");
+      int k = Integer.parseInt(tokens.get(0));
+      // If it is an integer and a string
+      if (tokens.size() == 2) {
+        Star centerStar = nameHashMap.get(tokens.get(1));
+        List<Number> starCoordinates = centerStar.getCoordinates();
+        Queue<Star> nameNeighbors = tree.radius(k + 1, starCoordinates);
+        nameNeighbors.remove();
+        if (nameNeighbors.size() != 0) {
+          for (Star element : nameNeighbors) {
+            System.out.println(element.getId());
+          }
+        }
+        // If it is an integer followed by three doubles
+      } else if (tokens.size() == 4) {
+        List<Number> targetPoint = new ArrayList<>();
+        for (int i = 0; i < 3; i++) {
+          targetPoint.add(i, Double.parseDouble(tokens.get(i + 1)));
+        }
+        Queue<Star> coordinateNeighbors = tree.radius(k, targetPoint);
+        for (Star element : coordinateNeighbors) {
+          System.out.println(element.getId());
+        }
+      }
     }
   }
 
