@@ -1,4 +1,4 @@
-package edu.brown.cs.student.stars;
+package edu.brown.cs.cshi18.trees;
 
 import java.util.Comparator;
 import java.util.List;

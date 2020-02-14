@@ -1,4 +1,4 @@
-package edu.brown.cs.student.stars;
+package edu.brown.cs.cshi18.main;
 
 import java.io.File;
 import java.io.IOException;
@@ -6,6 +6,9 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.Map;
 
+import edu.brown.cs.cshi18.repl.CommandManager;
+import edu.brown.cs.cshi18.repl.REPL;
+import edu.brown.cs.cshi18.stars.Universe;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 import spark.ExceptionHandler;

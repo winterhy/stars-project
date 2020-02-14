@@ -1,5 +1,5 @@
-package edu.brown.cs.student.stars;
-import org.checkerframework.checker.units.qual.A;
+package edu.brown.cs.cshi18.stars;
+import edu.brown.cs.cshi18.trees.KDTree;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -140,33 +140,26 @@ public class KDTreeTest {
 
     // One node tree case:
     assertNull(oneNodeTree.neighbors(0,
-        new ArrayList<>(List.of(0,0,0)),
-        new ArrayList<>()));
+        new ArrayList<>(List.of(0,0,0))));
     assertEquals(oneNodeTree.neighbors(1,
-        new ArrayList<>(List.of(0,0,0)),
-        new ArrayList<>()), new ArrayList<>(List.of(origin)));
+        new ArrayList<>(List.of(0,0,0))), new ArrayList<>(List.of(origin)));
     assertEquals(oneNodeTree.neighbors(1,
-        new ArrayList<>(List.of(99,99,-99)),
-        new ArrayList<>()), new ArrayList<>(List.of(origin)));
+        new ArrayList<>(List.of(99,99,-99))), new ArrayList<>(List.of(origin)));
 
     // Two node tree case:
     // Target point equals first root
     assertEquals(twoNodeLeftTree.neighbors(1,
-        new ArrayList<>(List.of(1,0,0)),
-        new ArrayList<>()), new ArrayList<>(List.of(one)));
+        new ArrayList<>(List.of(1,0,0))), new ArrayList<>(List.of(one)));
 
     // Target point equals left child
     assertEquals(twoNodeLeftTree.neighbors(1,
-       new ArrayList<>(List.of(0,0,0)),
-        new ArrayList<>()), new ArrayList<>(List.of(origin)));
+       new ArrayList<>(List.of(0,0,0))), new ArrayList<>(List.of(origin)));
 
     assertEquals(new HashSet<>(twoNodeLeftTree.neighbors(2,
-        new ArrayList<>(List.of(1,0,0)),
-        new ArrayList<>())),
+        new ArrayList<>(List.of(1,0,0)))),
         new HashSet<>(new ArrayList<>(List.of(one, origin))));
     assertEquals(new HashSet<>(twoNodeLeftTree.neighbors(2,
-        new ArrayList<>(List.of(0,0,0)),
-        new ArrayList<>())),
+        new ArrayList<>(List.of(0,0,0)))),
         new HashSet<>(new ArrayList<>(List.of(one, origin))));
     tearDown();
   }

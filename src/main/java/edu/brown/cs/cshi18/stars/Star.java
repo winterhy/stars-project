@@ -1,4 +1,6 @@
-package edu.brown.cs.student.stars;
+package edu.brown.cs.cshi18.stars;
+
+import edu.brown.cs.cshi18.trees.HasCoordinates;
 
 import java.util.List;
 

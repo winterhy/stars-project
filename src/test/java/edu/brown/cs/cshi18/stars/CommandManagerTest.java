@@ -1,5 +1,6 @@
-package edu.brown.cs.student.stars;
+package edu.brown.cs.cshi18.stars;
 
+import edu.brown.cs.cshi18.repl.CommandManager;
 import org.junit.Before;
 import org.junit.After;
 

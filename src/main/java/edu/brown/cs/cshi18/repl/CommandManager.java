@@ -1,4 +1,4 @@
-package edu.brown.cs.student.stars;
+package edu.brown.cs.cshi18.repl;
 
 import java.util.HashMap;
 import java.util.Arrays;
@@ -29,7 +29,20 @@ public class CommandManager {
     void execute(List<String> tokens);
   }
 
+  /**
+   * An interface which a class that install commands will implement.
+   */
+  public interface Install {
+
     /**
+     * A method to install specific command patterns to this CommandManager.
+     *
+     * @param cp this CommandManager
+     */
+    void installCommands(CommandManager cp);
+  }
+
+  /**
      * Takes in a pattern and a corresponding command class
      * to add to commandMap.
      *

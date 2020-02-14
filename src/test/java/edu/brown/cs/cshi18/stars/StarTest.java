@@ -1,4 +1,4 @@
-package edu.brown.cs.student.stars;
+package edu.brown.cs.cshi18.stars;
 
 import org.junit.After;
 import org.junit.Before;
@@ -58,9 +58,9 @@ public class StarTest {
     assertEquals(origin.euclideanDistance(one.getCoordinates()),
         1, 0);
     assertEquals(origin.euclideanDistance(
-        new ArrayList<>(List.of(3,0,4))), 5, 0);
+        new ArrayList<>(List.of(3,0,4))), 25, 0);
     assertEquals(negative.euclideanDistance(
-        new ArrayList<>(List.of(2,-1,3))), 5, 0);
+        new ArrayList<>(List.of(2,-1,3))), 25, 0);
     tearDown();
   }
 

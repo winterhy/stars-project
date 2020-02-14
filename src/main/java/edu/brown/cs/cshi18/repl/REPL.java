@@ -1,4 +1,4 @@
-package edu.brown.cs.student.stars;
+package edu.brown.cs.cshi18.repl;
 
 import java.io.BufferedReader;
 import java.io.IOException;

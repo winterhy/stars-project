@@ -1,7 +1,9 @@
-package edu.brown.cs.student.stars;
+package edu.brown.cs.cshi18.stars;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import edu.brown.cs.cshi18.trees.CoordinateComparator;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
