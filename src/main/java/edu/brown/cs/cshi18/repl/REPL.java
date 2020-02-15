@@ -47,4 +47,6 @@ public class REPL {
   public static void errorPrint(Object e) {
     System.err.println(e);
   }
+
+  //public
 }

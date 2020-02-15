@@ -7,7 +7,6 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.HashSet;
-import java.util.PriorityQueue;
 
 import static org.junit.Assert.*;
 
@@ -15,10 +14,19 @@ public class KDTreeTest {
   private KDTree<Star> oneNodeTree;
   private KDTree<Star> twoNodeLeftTree;
   private KDTree<Star> threeNodeEvenTree;
-  private KDTree<Star> twoNodeSameCoordinates;
   private KDTree<Star> depthThreeA;
   private Star origin;
   private Star one;
+  private Star oneTwo;
+  private Star twoOne;
+  private Star firstLeft;
+  private Star firstRight;
+  private Star secondLeftLeft;
+  private Star secondLeftRight;
+  private Star secondRightLeft;
+  private Star secondRightRight;
+  private Star thirdLeftLeftLeft;
+  private Star thirdRightLeftLeft;
   // Should be arbitrary in parent and child
 
   /**
@@ -28,11 +36,38 @@ public class KDTreeTest {
   public void setUp() {
     origin = new Star(0, "Sol",
         new ArrayList<>(List.of(0,0,0)));
-    one = new Star(1, "Star One",
+    one = new Star(10, "Star One",
         new ArrayList<>(List.of(1,0,0)));
+    oneTwo = new Star(12, "Star One Two",
+        new ArrayList<>(List.of(1,2,0)));
+    twoOne = new Star(21, "Star Two One",
+        new ArrayList<>(List.of(2,1,0)));
+    firstLeft =  new Star(1, "",
+        new ArrayList<>(List.of(-1,3,0)));
+    firstRight =  new Star(2, "",
+        new ArrayList<>(List.of(1,2,0)));
+    secondLeftLeft =  new Star(3, "",
+        new ArrayList<>(List.of(-1,0,5)));
+    secondLeftRight =  new Star(4, "",
+        new ArrayList<>(List.of(-2,4,0)));
+    secondRightLeft =  new Star(5, "",
+        new ArrayList<>(List.of(2,1,4)));
+    secondRightRight =  new Star(6, "",
+        new ArrayList<>(List.of(2,3,0)));
+    thirdLeftLeftLeft =  new Star(7, "",
+        new ArrayList<>(List.of(-2,1,4)));
+    thirdRightLeftLeft =  new Star(8, "",
+        new ArrayList<>(List.of(1,1.2,0)));
     oneNodeTree = new KDTree<>(new ArrayList<>(List.of(origin)),0);
     twoNodeLeftTree = new KDTree<>(
         new ArrayList<>(List.of(one, origin)), 0);
+    threeNodeEvenTree = new KDTree<>(
+        new ArrayList<>(List.of(origin, oneTwo, twoOne)), 0);
+    depthThreeA = new KDTree<>(
+        new ArrayList<>(List.of(
+            origin, firstLeft, firstRight, secondLeftLeft,
+            secondLeftRight, secondRightLeft, secondRightRight,
+            thirdLeftLeftLeft, thirdRightLeftLeft)), 0);
   }
 
   /**
@@ -42,6 +77,8 @@ public class KDTreeTest {
   public void tearDown() {
     oneNodeTree = null;
     twoNodeLeftTree = null;
+    threeNodeEvenTree = null;
+    depthThreeA = null;
   }
 
 
@@ -69,57 +106,24 @@ public class KDTreeTest {
     tearDown();
   }
 
-
-
   /**
   * Test threeNodeEvenTree.
   */
   @Test
   public void testThreeNodeEvenTree() {
-    Star origin = new Star(0, "Sol",
-        new ArrayList<>(List.of(0,0,0)));
-    Star one = new Star(1, "Star One",
-        new ArrayList<>(List.of(1,2,0)));
-    Star two = new Star(2, "Star Two",
-        new ArrayList<>(List.of(2,1,0)));
-    Star oneShift = new Star(3, "",
-        new ArrayList<>(List.of(1,0,0)));
-    threeNodeEvenTree = new KDTree<>(
-        new ArrayList<>(List.of(origin, one, two)), 0);
-    assertEquals(threeNodeEvenTree.getRoot(), one);
+    setUp();
+    assertEquals(threeNodeEvenTree.getRoot(), oneTwo);
     assertEquals(threeNodeEvenTree.getLeft().getRoot(), origin);
-    assertEquals(threeNodeEvenTree.getRight().getRoot(), two);
+    assertEquals(threeNodeEvenTree.getRight().getRoot(), twoOne);
+    tearDown();
   }
 
   /**
-   * Test depthFourA.
-   * //TODO: ASK IF THIS TREE IS CORRECT!!!
+   * Test depthThreeA.
    */
   @Test
-  public void testDepthFourA() {
-    Star origin = new Star(0, "Sol",
-        new ArrayList<>(List.of(0,0,0)));
-    Star firstLeft =  new Star(1, "",
-        new ArrayList<>(List.of(-1,3,0)));
-    Star firstRight =  new Star(2, "",
-        new ArrayList<>(List.of(1,2,0)));
-    Star secondLeftLeft =  new Star(3, "",
-        new ArrayList<>(List.of(-1,0,5)));
-    Star secondLeftRight =  new Star(4, "",
-        new ArrayList<>(List.of(-2,4,0)));
-    Star secondRightLeft =  new Star(5, "",
-        new ArrayList<>(List.of(2,1,4)));
-    Star secondRightRight =  new Star(6, "",
-        new ArrayList<>(List.of(2,3,0)));
-    Star thirdLeftLeftLeft =  new Star(7, "",
-        new ArrayList<>(List.of(-2,1,4)));
-    Star thirdRightLeftLeft =  new Star(8, "",
-        new ArrayList<>(List.of(1,1.2,0)));
-    depthThreeA = new KDTree<>(
-        new ArrayList<>(List.of(
-            origin, firstLeft, firstRight, secondLeftLeft,
-            secondLeftRight, secondRightLeft, secondRightRight,
-            thirdLeftLeftLeft, thirdRightLeftLeft)), 0);
+  public void testDepthThreeA() {
+    setUp();
     assertEquals(depthThreeA.getRoot(), origin);
     assertEquals(depthThreeA.getLeft().getRoot(), firstLeft);
     assertEquals(depthThreeA.getRight().getRoot(), firstRight);
@@ -129,11 +133,12 @@ public class KDTreeTest {
     assertEquals(depthThreeA.getRight().getRight().getRoot(), secondRightRight);
     assertEquals(depthThreeA.getLeft().getLeft().getLeft().getRoot(), thirdLeftLeftLeft);
     assertEquals(depthThreeA.getRight().getLeft().getLeft().getRoot(), thirdRightLeftLeft);
+    tearDown();
   }
 
-
   /**
-   * Test neighbors method.
+   * Test neighbors method. Mainly for base and edge cases. Comprehensive testing is
+   * done in System Tests.
    */
   @Test
   public void testNeighbors() {
@@ -155,13 +160,43 @@ public class KDTreeTest {
     // Target point equals left child
     assertEquals(twoNodeLeftTree.neighbors(1,
        new ArrayList<>(List.of(0,0,0))), new ArrayList<>(List.of(origin)));
+    assertEquals(twoNodeLeftTree.neighbors(2,
+        new ArrayList<>(List.of(1,0,0))), new ArrayList<>(List.of(one, origin)));
+    assertEquals(twoNodeLeftTree.neighbors(2,
+        new ArrayList<>(List.of(0,0,0))), new ArrayList<>(List.of(origin, one)));
 
-    assertEquals(new HashSet<>(twoNodeLeftTree.neighbors(2,
-        new ArrayList<>(List.of(1,0,0)))),
-        new HashSet<>(new ArrayList<>(List.of(one, origin))));
-    assertEquals(new HashSet<>(twoNodeLeftTree.neighbors(2,
-        new ArrayList<>(List.of(0,0,0)))),
-        new HashSet<>(new ArrayList<>(List.of(one, origin))));
+    tearDown();
+  }
+
+  /**
+   * Test radius method. Mainly for base and edge cases. Comprehensive testing in
+   * system tests.
+   */
+  @Test
+  public void testRadius() {
+    setUp();
+
+    // One node tree case:
+    assertEquals(oneNodeTree.radius(0,
+        new ArrayList<>(List.of(0,0,0))), new ArrayList<>(List.of(origin)));
+    assertEquals(oneNodeTree.radius(1,
+        new ArrayList<>(List.of(0,0,0))), new ArrayList<>(List.of(origin)));
+    assertEquals(oneNodeTree.radius(5,
+        new ArrayList<>(List.of(99,99,-99))), new ArrayList<>());
+
+    // Two node tree case:
+    // Target point equals first root
+    assertEquals(twoNodeLeftTree.radius(0,
+        new ArrayList<>(List.of(1,0,0))), new ArrayList<>(List.of(one)));
+
+    // Target point equals left child
+    assertEquals(twoNodeLeftTree.radius(1,
+        new ArrayList<>(List.of(0,0,0))), new ArrayList<>(List.of(origin, one)));
+    assertEquals(twoNodeLeftTree.radius(2,
+        new ArrayList<>(List.of(1,0,0))), new ArrayList<>(List.of(one, origin)));
+    assertEquals(twoNodeLeftTree.radius(0.99,
+        new ArrayList<>(List.of(0,0,0))), new ArrayList<>(List.of(origin)));
+
     tearDown();
   }
 }

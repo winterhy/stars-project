@@ -1,0 +1,40 @@
+input[type="number"] {
+  width: 3em;
+}
+
+body {
+  background-color: #1F2833;
+  background-image: url("space.jpg");
+}
+
+#one {
+  color: white;
+}
+
+.title {
+  text-align: center;
+  color: #E4A64F;
+  font-size: 100px;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+.text {
+  color: #C5C6C7;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 14px;
+  font-style: normal;
+  font-variant: normal;
+  font-weight: 400;
+  line-height: 20px;
+}
+
+div {
+  border: 0.5rem outset pink;
+  outline: 0.5rem solid khaki;
+  box-shadow: 0 0 0 2rem skyblue;
+  border-radius: 12px;
+  font: bold 1rem sans-serif;
+  margin: 2rem;
+  padding: 1rem;
+  outline-offset: 0.5rem;
+}

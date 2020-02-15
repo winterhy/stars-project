@@ -6,10 +6,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.PriorityQueue;
-import java.util.Queue;
 
 /**
- * K-D Tree data structure for organizing coordinates.
+ * K-D Tree data structure for organizing objects that implments
+ * HasCoordinates.
  *
  * @param <T> An object that has coordinates
  */
@@ -61,14 +61,14 @@ public class KDTree<T extends HasCoordinates> {
       // Merely for internal testing
       REPL.errorPrint("ERROR: Empty List");
     } else if (size == 1) {
+      // End of recursion if size is 1.
       root = l.get(0);
       depth = depthTracking;
       left = null;
       right = null;
     } else {
-      // depth starts from 0
-      // dimension is 3 for the stars project
       int dimension = l.get(0).getCoordinates().size();
+      // The coordinate is the axis.
       int coordinate = depthTracking % dimension;
       Collections.sort(l, new CoordinateComparator<T>(coordinate));
       int medianIndex;
@@ -83,6 +83,7 @@ public class KDTree<T extends HasCoordinates> {
       depth = depthTracking;
       List<T> leftList = l.subList(0, medianIndex);
       List<T> rightList = l.subList(medianIndex + 1, size);
+      // Recur down the children.
       if (leftList.isEmpty()) {
         left = null;
         right = new KDTree<>(rightList, depthTracking + 1);
@@ -118,7 +119,7 @@ public class KDTree<T extends HasCoordinates> {
   }
 
   /**
-   * Main part of neighbors method, accepts queue.
+   * Main part of neighbors method, accepts queue to recur on.
    *
    * @param k number of neighbors to find
    * @param targetPoint target point for closest neighbors
@@ -127,23 +128,18 @@ public class KDTree<T extends HasCoordinates> {
   public void neighborsQueue(int k, List<Number> targetPoint, PriorityQueue<T> queue) {
     if (queue.size() < k) {
       queue.add(root);
-      //System.out.println("Queue: " + queue);
     } else {
       queue.add(root);
-      //System.out.println("Queue before remove: " + queue);
-      // removes the furthest neighbor at the head of the queue
+      // Removes the furthest neighbor at the head of the queue
+      // Could be what was just added
       queue.remove();
-      //System.out.println("Queue after remove: " + queue);
     }
-    //List<T> updated = new ArrayList<>(queue);
-    //System.out.println("Updated List first: " + updated);
     List<Number> nodeCoordinates = root.getCoordinates();
     int dimension = nodeCoordinates.size();
     int axis = depth % dimension;
     double axisDistance = Math.abs(
         nodeCoordinates.get(axis).doubleValue()
             - targetPoint.get(axis).doubleValue());
-    // Euclidean distance between
     // if less than k neighbors, check both sides
     if (queue.element().euclideanDistance(targetPoint) > axisDistance
         || queue.size() < k) {
@@ -158,13 +154,20 @@ public class KDTree<T extends HasCoordinates> {
     } else if (nodeCoordinates.get(axis).doubleValue()
         < targetPoint.get(axis).doubleValue() && right != null) {
       right.neighborsQueue(k, targetPoint, queue);
-
     } else if (nodeCoordinates.get(axis).doubleValue()
         >= targetPoint.get(axis).doubleValue() && left != null) {
       left.neighborsQueue(k, targetPoint, queue);
     }
   }
 
+  /**
+   * Wrapper for main part of radius method.
+   *
+   * @param r radius
+   * @param targetPoint coordinates of the target point
+   * @return a list of T's that are in the radius including
+   * the T on the target point
+   */
   public List<T> radius(double r, List<Number> targetPoint) {
     PriorityQueue<T> queue = new PriorityQueue<T>(
         new ClosestFirstDistanceComparator<>(targetPoint));
@@ -175,8 +178,14 @@ public class KDTree<T extends HasCoordinates> {
     return listOfNeighbors;
   }
 
+  /**
+   * Main part of neighbors method, accepts queue to recur on.
+   *
+   * @param r radius
+   * @param targetPoint coordinates of the target point
+   * @param queue list of T within the radius
+   */
   public void radiusQueue(double r, List<Number> targetPoint, PriorityQueue<T> queue) {
-    // TODO: if rigorous testing doesnt work, maybe use <=
     if (root.euclideanDistance(targetPoint) <= r) {
       queue.add(root);
     }
@@ -198,11 +207,11 @@ public class KDTree<T extends HasCoordinates> {
     } else {
       // My trees are left-leaning, so check left when equals to
       if (nodeCoordinates.get(axis).doubleValue()
-          >= targetPoint.get(axis).doubleValue() && left != null) {
-        left.radiusQueue(r, targetPoint, queue);
-      } else if (nodeCoordinates.get(axis).doubleValue()
           < targetPoint.get(axis).doubleValue() && right != null) {
         right.radiusQueue(r, targetPoint, queue);
+      } else if (nodeCoordinates.get(axis).doubleValue()
+          >= targetPoint.get(axis).doubleValue() && left != null) {
+        left.radiusQueue(r, targetPoint, queue);
       }
     }
   }

@@ -10,12 +10,33 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Queue;
 import java.util.regex.Pattern;
 
+/**
+ * Main class for stars program. Stores information for stars in trees.
+ * Install commands for program. Stores output.
+ */
 public class Universe implements CommandManager.Install {
   private KDTree<Star> tree;
   private HashMap<String, Star> nameHashMap = new HashMap<>();
+  private List<String> neighborsOutput;
+  private List<String> radiusOutput;
+
+  public KDTree<Star> getTree() {
+    return tree;
+  }
+
+  public HashMap<String, Star> getNameHashMap() {
+    return nameHashMap;
+  }
+
+  public List<String> getNeighborsOutput() {
+    return neighborsOutput;
+  }
+
+  public List<String> getRadiusOutput() {
+    return radiusOutput;
+  }
 
   /**
    * Method from the install interface.
@@ -37,6 +58,9 @@ public class Universe implements CommandManager.Install {
         new RadiusCommand());
   }
 
+  /**
+   * Class for the star command.
+   */
   class StarsCommand implements CommandManager.Command {
     /**
      * Executes the star command. Takes in a csv files as a string.
@@ -107,55 +131,87 @@ public class Universe implements CommandManager.Install {
     }
   }
 
+  /**
+   * Class for the neighbors command.
+   */
   class NeighborsCommand implements CommandManager.Command {
+    /**
+     * Executes the neighbors command. It can
+     * detect whether a neighbors search with name is needed
+     * or with coordinate is needed.
+     *
+     * @param tokens list of arguments needed for the method
+     */
     @Override
     public void execute(List<String> tokens) {
       // call neighbors on KDTree
       // Will be an integer because of regexp checking
       int k = Integer.parseInt(tokens.get(0));
-      //System.out.println("tokens.get(1): " + tokens.get(1));
       // If it is an integer and a string
-      //System.out.println("Hashmap in neighbors: " + nameHashMap.keySet());
       if (tokens.size() == 2) {
         // This strips away the input name's quote
-        //System.out.println("tokens.get(1): " + tokens.get(1));
         String name = tokens.get(1).replace("\"", "");
-        //System.out.println("name: " + name);
         // This gets the star from the HashMap with names
         Star centerStar = nameHashMap.get(name);
-        //System.out.println("Center star : " + centerStar);
-        //System.out.println("Center star coordinates : " + centerStar.getCoordinates());
         try {
           List<Number> starCoordinates = centerStar.getCoordinates();
           try {
             List<Star> nameNeighbors = tree.neighbors(k + 1, starCoordinates);
             nameNeighbors.remove(0);
+            neighborsOutput = new ArrayList<>();
             if (nameNeighbors.size() != 0) {
               for (Star element : nameNeighbors) {
                 REPL.print(element.getId());
+                neighborsOutput.add("Star: " + element.getId());
               }
             }
           } catch (NullPointerException e) {
+            neighborsOutput = new ArrayList<>();
+            neighborsOutput.add("ERROR: Please load a valid file first.");
             REPL.errorPrint("ERROR: Please load a valid file first.");
           }
         } catch (NullPointerException e) {
-          REPL.errorPrint("ERROR: Cannot find stars with this name.");
+          neighborsOutput = new ArrayList<>();
+          neighborsOutput.add(
+              "ERROR: Cannot find stars with this name. Change the name or load a new file.");
+          REPL.errorPrint(
+              "ERROR: Cannot find stars with this name. Change the name or load a new file.");
         }
       // If it is an integer followed by three doubles
       } else if (tokens.size() == 4) {
         List<Number> targetPoint = createPoint(tokens.subList(1, 4));
-        List<Star> coordinateNeighbors = tree.neighbors(k, targetPoint);
-        for (Star element : coordinateNeighbors) {
-          REPL.print(element.getId());
+        try {
+          List<Star> coordinateNeighbors = tree.neighbors(k, targetPoint);
+          neighborsOutput = new ArrayList<>();
+          for (Star element : coordinateNeighbors) {
+            REPL.print(element.getId());
+            neighborsOutput.add("Star: " + element.getId());
+          }
+        } catch (NullPointerException e) {
+          neighborsOutput = new ArrayList<>();
+          neighborsOutput.add("ERROR: Please load a valid file first.");
+          REPL.errorPrint("ERROR: Please load a valid file first.");
         }
       }
     }
+
+//    @Override
+//    public List<String> guiExecute(List<String> tokens) {
+//
+//    }
   }
 
   class RadiusCommand implements CommandManager.Command {
+    /**
+     * Executes the neighbors command. It can
+     * detect whether a neighbors search with name is needed
+     * or with coordinate is needed.
+     *
+     * @param tokens list of arguments needed for the method
+     */
     @Override
     public void execute(List<String> tokens) {
-      int r = Integer.parseInt(tokens.get(0));
+      double r = Double.parseDouble(tokens.get(0));
       // If it is an integer and a string
       if (tokens.size() == 2) {
         // This strips away the input name's quote
@@ -165,30 +221,55 @@ public class Universe implements CommandManager.Install {
           Star centerStar = nameHashMap.get(name);
           List<Number> starCoordinates = centerStar.getCoordinates();
           try {
-            List<Star> nameNeighbors = tree.radius(r, starCoordinates);
-            nameNeighbors.remove(0);
-            if (nameNeighbors.size() != 0) {
-              for (Star element : nameNeighbors) {
+            List<Star> nameRadius = tree.radius(r, starCoordinates);
+            nameRadius.remove(0);
+            radiusOutput = new ArrayList<>();
+            if (nameRadius.size() != 0) {
+              for (Star element : nameRadius) {
                 REPL.print(element.getId());
+                radiusOutput.add("Star: " + element.getId());
               }
             }
           } catch (NullPointerException e) {
+            radiusOutput = new ArrayList<>();
+            radiusOutput.add("ERROR: Please load a valid file first.");
             REPL.errorPrint("ERROR: Please load a valid file first.");
           }
         } catch (NullPointerException e) {
-          REPL.errorPrint("ERROR: Cannot find stars with this name.");
+          radiusOutput = new ArrayList<>();
+          radiusOutput.add(
+              "ERROR: Cannot find stars with this name. Change the name or load a new file.");
+          REPL.errorPrint(
+              "ERROR: Cannot find stars with this name. Change the name or load a new file.");
         }
       // If it is an integer followed by three doubles
       } else if (tokens.size() == 4) {
         List<Number> targetPoint = createPoint(tokens.subList(1, 4));
-        List<Star> coordinateNeighbors = tree.radius(r, targetPoint);
-        for (Star element : coordinateNeighbors) {
-          REPL.print(element.getId());
+        try {
+          List<Star> coordinateNeighbors = tree.radius(r, targetPoint);
+          radiusOutput = new ArrayList<>();
+          for (Star element : coordinateNeighbors) {
+            REPL.print(element.getId());
+            radiusOutput.add("Star: " + element.getId());
+          }
+        } catch (NullPointerException e) {
+          radiusOutput = new ArrayList<>();
+          radiusOutput.add("ERROR: Please load a valid file first.");
+          REPL.errorPrint("ERROR: Please load a valid file first.");
         }
       }
     }
   }
 
+  /**
+   * Helper method for the NeighborsCommand execute
+   * and the RadiusCommand execute. This creates a
+   * coordinate made of a list of numbers from a
+   * list of strings representing numbers.
+   *
+   * @param tokens a list of strings representing numbers
+   * @return a list of numbers representing a coordinate
+   */
   public List<Number> createPoint(List<String> tokens) {
     List<Number> targetPoint = new ArrayList<>();
     for (int i = 0; i < 3; i++) {
@@ -196,5 +277,4 @@ public class Universe implements CommandManager.Install {
     }
     return targetPoint;
   }
-
 }

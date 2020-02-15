@@ -1,7 +1,6 @@
 package edu.brown.cs.cshi18.repl;
 
-import edu.brown.cs.cshi18.stars.Universe;
-
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -16,6 +15,11 @@ import java.util.regex.Pattern;
 public class CommandManager {
   private HashMap<String, Command> commandMap = new HashMap<String,
       Command>();
+  private List<String> guiOutput;
+
+  public List<String> getGuiOutput() {
+    return guiOutput;
+  }
 
   /**
    * An interface that the command classes will implement.
@@ -30,6 +34,21 @@ public class CommandManager {
      */
     void execute(List<String> tokens);
   }
+
+//  /**
+//   * An interface that a gui command class will implement.
+//   */
+//  public interface GUICommand {
+//
+//    /**
+//     * An execute method for classes who implements a
+//     * command that accepts input from gui.
+//     *
+//     * @param tokens list of arguments needed for the method
+//     * @return the output for gui
+//     */
+//    List<String> guiExecute(List<String> tokens);
+//  }
 
   /**
    * An interface which a class that install commands will implement.
@@ -89,10 +108,32 @@ public class CommandManager {
         List<String> list = Arrays.asList(los);
         commandMap.get(elt).execute(list.subList(1, list.size()));
         foundCommand = true;
+        guiOutput = null;
       }
     }
     if (!foundCommand && !line.equals("")) {
-      System.out.println("ERROR: Incorrect command or formatting");
+      REPL.errorPrint("ERROR: Incorrect command or formatting");
+      guiOutput = new ArrayList<>(List.of("ERROR: Incorrect command or formatting"));
     }
   }
+
+//  public List<String> guiProcess(String line) {
+//    // Creates a set of the map keys (aka accepted patterns)
+//    Set<String> patterns = commandMap.keySet();
+//    // Creates an iterator object
+//    Iterator<String> itr = patterns.iterator();
+//    // Loop through the iterator
+//    while (itr.hasNext()) {
+//      // Picks an element from the iterator
+//      String elt = itr.next();
+//      // See if the input line follows the regexp
+//      if (Pattern.matches(elt, line)) {
+//        String[] los = line.split("\\s(?=([^\"]*\"[^\"]*\")*[^\"]*$)");
+//        List<String> list = Arrays.asList(los);
+//        return commandMap.get(elt).guiExecute(list.subList(1, list.size()));
+//      }
+//    }
+//    //REPL.errorPrint("ERROR: Incorrect command or formatting");
+//    return new ArrayList<>(List.of("ERROR: Incorrect command or formatting"));
+//  }
 }

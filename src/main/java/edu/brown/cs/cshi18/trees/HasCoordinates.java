@@ -14,6 +14,14 @@ public interface HasCoordinates {
    * @return a list of numbers
    */
   List<Number> getCoordinates();
+
+  /**
+   * Method to find a coordinate's euclidean distance from
+   * a target point.
+   * @param targetPoint a list of numbers that is the coordinate
+   *                    of the target point
+   * @return a double that represents the euclidean distance.
+   */
   double euclideanDistance(List<Number> targetPoint);
 }
 

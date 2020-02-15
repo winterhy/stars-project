@@ -5,19 +5,33 @@ import edu.brown.cs.cshi18.trees.HasCoordinates;
 import java.util.List;
 
 /**
- * This is a star object. Includes ID, Name, and Coordinates
+ * This is a star object. Includes ID, Name, and Coordinates.
  */
 public class Star implements HasCoordinates {
   private Integer id;
   private String name;
   private List<Number> coordinates;
+
+  /**
+   * Access method for id.
+   * @return id as integer.
+   */
   public int getId() {
     return id;
   }
+
+  /**
+   * Access method for name.
+   * @return name as string.
+   */
   public String getName() {
     return name;
   }
 
+  /**
+   * This is an access method in accordance from implementing HasCoordinates.
+   * @return coordinates in a list of numbers.
+   */
   @Override
   public List<Number> getCoordinates() {
     return coordinates;
@@ -36,6 +50,7 @@ public class Star implements HasCoordinates {
     this.name = name;
     this.coordinates = coordinates;
   }
+
   /**
    * Supporting method to get the euclidean distance between two lists
    * of numbers. Takes two equal sized lists.

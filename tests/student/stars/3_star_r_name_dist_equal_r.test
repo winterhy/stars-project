@@ -1,7 +1,7 @@
 INPUT
 stars data/stars/three-star.csv
-neighbors 1 0 0 0
+radius 1 "Star One"
 OUTPUT
 Read 3 stars from data/stars/three-star.csv
-1
+2
 END

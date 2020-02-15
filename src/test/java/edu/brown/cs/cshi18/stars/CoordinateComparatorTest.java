@@ -42,6 +42,9 @@ public class CoordinateComparatorTest {
     _firstCoordinateComparator = null;
     _secondCoordinateComparator = null;
     _thirdCoordinateComparator = null;
+    zeroes = null;
+    genericListOne = null;
+    genericListTwo = null;
   }
 
   /**
