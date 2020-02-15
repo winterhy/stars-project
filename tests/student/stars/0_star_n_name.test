@@ -1,0 +1,6 @@
+INPUT
+stars data/stars/zero-star.csv
+OUTPUT
+Read 0 stars from data/stars/zero-star.csv
+ERROR:
+END

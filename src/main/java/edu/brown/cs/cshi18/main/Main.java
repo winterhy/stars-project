@@ -60,14 +60,15 @@ public final class Main {
       runSparkServer((int) options.valueOf("port"));
     }
 
-    // TODO: Process commands in a REPL
-    REPL running = new REPL();
+    // Creates REPL and Program objects
+    REPL repl = new REPL();
     CommandManager manager = new CommandManager();
     Universe universe = new Universe();
-    universe.installCommands(manager);
-    running.read(manager);
 
-    // or maybe construct the repl using the command manager?
+    // Installs the commands in programs
+    manager.install(universe);
+    // The repl starts reading
+    repl.read(manager);
   }
 
   private static FreeMarkerEngine createEngine() {

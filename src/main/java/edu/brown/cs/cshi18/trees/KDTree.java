@@ -1,5 +1,7 @@
 package edu.brown.cs.cshi18.trees;
 
+import edu.brown.cs.cshi18.repl.REPL;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -39,29 +41,35 @@ public class KDTree<T extends HasCoordinates> {
    * in a depth parameter that determine's the tree's
    * initial depth.
    *
-   * @param l list of objects that has coordinates
+   * @param l NON-EMPTY list of objects that has coordinates
    * @param depth keep track of the depth of the tree, init: 0
    */
   public KDTree(List<T> l, int depth) {
     this.setUp(l, depth);
   }
 
-  public void setUp(List<T> l, int depth) {
+  /**
+   * Helps set up in the constructor class.
+   *
+   * @param l NON-EMPTY list of objects that has coordinates
+   * @param depthTracking keep track of the depth of the tree, init: 0
+   */
+  public void setUp(List<T> l, int depthTracking) {
     int size = l.size();
     if (size == 0) {
       // This error will not be revealed to user
       // Merely for internal testing
-      System.err.println("ERROR: Empty List");
+      REPL.errorPrint("ERROR: Empty List");
     } else if (size == 1) {
       root = l.get(0);
-      this.depth = depth;
+      depth = depthTracking;
       left = null;
       right = null;
     } else {
       // depth starts from 0
       // dimension is 3 for the stars project
       int dimension = l.get(0).getCoordinates().size();
-      int coordinate = depth % dimension;
+      int coordinate = depthTracking % dimension;
       Collections.sort(l, new CoordinateComparator<T>(coordinate));
       int medianIndex;
       if (size % 2 == 0) {
@@ -72,18 +80,18 @@ public class KDTree<T extends HasCoordinates> {
         medianIndex = (size - 1) / 2;
       }
       root = l.get(medianIndex);
-      this.depth = depth;
+      depth = depthTracking;
       List<T> leftList = l.subList(0, medianIndex);
       List<T> rightList = l.subList(medianIndex + 1, size);
       if (leftList.isEmpty()) {
         left = null;
-        right = new KDTree<>(rightList, depth + 1);
+        right = new KDTree<>(rightList, depthTracking + 1);
       } else if (rightList.isEmpty()) {
-        left = new KDTree<>(leftList, depth + 1);
+        left = new KDTree<>(leftList, depthTracking + 1);
         right = null;
       } else {
-        left = new KDTree<>(leftList, depth + 1);
-        right = new KDTree<>(rightList, depth + 1);
+        left = new KDTree<>(leftList, depthTracking + 1);
+        right = new KDTree<>(rightList, depthTracking + 1);
       }
     }
   }
@@ -169,8 +177,16 @@ public class KDTree<T extends HasCoordinates> {
 
   public void radiusQueue(double r, List<Number> targetPoint, PriorityQueue<T> queue) {
     // TODO: if rigorous testing doesnt work, maybe use <=
-    if (root.euclideanDistance(targetPoint) < r) {
+    if (root.euclideanDistance(targetPoint) <= r) {
       queue.add(root);
+    }
+    List<Number> nodeCoordinates = root.getCoordinates();
+    int dimension = nodeCoordinates.size();
+    int axis = depth % dimension;
+    double axisDistance = Math.abs(
+        nodeCoordinates.get(axis).doubleValue()
+            - targetPoint.get(axis).doubleValue());
+    if (axisDistance <= r) {
       if (left != null && right != null) {
         left.radiusQueue(r, targetPoint, queue);
         right.radiusQueue(r, targetPoint, queue);
@@ -180,9 +196,6 @@ public class KDTree<T extends HasCoordinates> {
         left.radiusQueue(r, targetPoint, queue);
       }
     } else {
-      List<Number> nodeCoordinates = root.getCoordinates();
-      int dimension = nodeCoordinates.size();
-      int axis = depth % dimension;
       // My trees are left-leaning, so check left when equals to
       if (nodeCoordinates.get(axis).doubleValue()
           >= targetPoint.get(axis).doubleValue() && left != null) {

@@ -37,7 +37,7 @@ public class Star implements HasCoordinates {
     this.coordinates = coordinates;
   }
   /**
-   * Supporting method to get the euclidean distance squared between two lists
+   * Supporting method to get the euclidean distance between two lists
    * of numbers. Takes two equal sized lists.
    *
    * @param targetPoint list of numbers that represent a coordinate
@@ -50,7 +50,7 @@ public class Star implements HasCoordinates {
       double difference = coordinates.get(i).doubleValue() - targetPoint.get(i).doubleValue();
       squareSum = squareSum + Math.pow(difference, 2.00);
     }
-    // No need to square root because it is slow and this is used for compare
-    return squareSum;
+    // Square roots the sum of squares
+    return Math.sqrt(squareSum);
   }
 }

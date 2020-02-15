@@ -1,5 +1,7 @@
 package edu.brown.cs.cshi18.repl;
 
+import edu.brown.cs.cshi18.stars.Universe;
+
 import java.util.HashMap;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -43,6 +45,15 @@ public class CommandManager {
   }
 
   /**
+   * Handles installation for commands.
+   *
+   * @param installer an object that implements the install method
+   */
+  public void install(Install installer) {
+    installer.installCommands(this);
+  }
+
+  /**
      * Takes in a pattern and a corresponding command class
      * to add to commandMap.
      *
@@ -74,13 +85,13 @@ public class CommandManager {
       String elt = itr.next();
       // See if the input line follows the regexp
       if (Pattern.matches(elt, line)) {
-        String[] los = line.split("\\s");
+        String[] los = line.split("\\s(?=([^\"]*\"[^\"]*\")*[^\"]*$)");
         List<String> list = Arrays.asList(los);
         commandMap.get(elt).execute(list.subList(1, list.size()));
         foundCommand = true;
       }
     }
-    if (!foundCommand) {
+    if (!foundCommand && !line.equals("")) {
       System.out.println("ERROR: Incorrect command or formatting");
     }
   }

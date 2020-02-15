@@ -1,0 +1,5 @@
+INPUT
+stars data/stars/malformed-header.csv
+OUTPUT
+ERROR:
+END

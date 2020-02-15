@@ -1,5 +1,6 @@
 package edu.brown.cs.cshi18.parser;
 
+import edu.brown.cs.cshi18.repl.REPL;
 import org.checkerframework.checker.units.qual.A;
 
 import java.io.BufferedReader;
@@ -37,7 +38,7 @@ public class CSVParser {
       boolean sameNumberOfColumns = false;
       String firstLine = reader.readLine();
       if (firstLine == null) {
-        System.err.println("ERROR: Empty file.");
+        REPL.errorPrint("ERROR: Empty file.");
       } else {
         String[] arrayOfFirstLine = firstLine.split(",");
         List<String> firstRow = Arrays.asList(arrayOfFirstLine);
@@ -52,7 +53,7 @@ public class CSVParser {
       }
     } catch (IOException e) {
       // handles read files and read line
-      System.err.println("ERROR: File does not exist.");
+      REPL.errorPrint("ERROR: File does not exist.");
     }
   }
 }
