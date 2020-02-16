@@ -19,18 +19,34 @@ public class KDTree<T extends HasCoordinates> {
   private KDTree<T> right;
   private int depth;
 
+  /**
+   * Access method to get the root of the tree.
+   * @return the root of the tree.
+   */
   public T getRoot() {
     return root;
   }
 
+  /**
+   * Access method to get the left children of the tree.
+   * @return the left children of the tree.
+   */
   public KDTree<T> getLeft() {
     return left;
   }
 
+  /**
+   * Access method to get the right children of the tree.
+   * @return the right children of the tree.
+   */
   public KDTree<T> getRight() {
     return right;
   }
 
+  /**
+   * Access method to get the depth of the tree.
+   * @return the depth of the tree.
+   */
   public int getDepth() {
     return depth;
   }
@@ -98,7 +114,9 @@ public class KDTree<T extends HasCoordinates> {
   }
 
   /**
-   * Wrapper for main part of neighbors method.
+   * Wrapper for main part of neighbors method. Takes in the number of
+   * neighbors to search and target point and returns a list of k
+   * neighbors
    *
    * @param k number of neighbors to search
    * @param targetPoint coordinates of the target point
@@ -108,8 +126,8 @@ public class KDTree<T extends HasCoordinates> {
     if (k == 0) {
       return new ArrayList<>();
     } else {
-
-      PriorityQueue<T> queue = new PriorityQueue<>(k, new FurthestFirstDistanceComparator<>(targetPoint));
+      PriorityQueue<T> queue = new PriorityQueue<>(k,
+          new FurthestFirstDistanceComparator<>(targetPoint));
       // outputs queue from furthest to nearest
       neighborsQueue(k, targetPoint, queue);
       List<T> listOfNeighbors = new ArrayList<>(queue);
@@ -161,7 +179,9 @@ public class KDTree<T extends HasCoordinates> {
   }
 
   /**
-   * Wrapper for main part of radius method.
+   * Wrapper for main part of radius method. Takes in a non-negative
+   * radius and target point and returns the list of T's that are
+   * within the radius inclusive
    *
    * @param r radius
    * @param targetPoint coordinates of the target point
@@ -187,6 +207,7 @@ public class KDTree<T extends HasCoordinates> {
    */
   public void radiusQueue(double r, List<Number> targetPoint, PriorityQueue<T> queue) {
     if (root.euclideanDistance(targetPoint) <= r) {
+      // Adds to queue if it is within radius
       queue.add(root);
     }
     List<Number> nodeCoordinates = root.getCoordinates();
@@ -195,6 +216,7 @@ public class KDTree<T extends HasCoordinates> {
     double axisDistance = Math.abs(
         nodeCoordinates.get(axis).doubleValue()
             - targetPoint.get(axis).doubleValue());
+    // Recur on both if axis distance is within radius
     if (axisDistance <= r) {
       if (left != null && right != null) {
         left.radiusQueue(r, targetPoint, queue);

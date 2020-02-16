@@ -3,11 +3,9 @@ package edu.brown.cs.cshi18.stars;
 import edu.brown.cs.cshi18.parser.CSVParser;
 import edu.brown.cs.cshi18.repl.CommandManager;
 import edu.brown.cs.cshi18.repl.REPL;
-import edu.brown.cs.cshi18.trees.HasCoordinates;
 import edu.brown.cs.cshi18.trees.KDTree;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -22,18 +20,34 @@ public class Universe implements CommandManager.Install {
   private List<String> neighborsOutput;
   private List<String> radiusOutput;
 
+  /**
+   * Access method to get the KDTree.
+   * @return the KDTree
+   */
   public KDTree<Star> getTree() {
     return tree;
   }
 
+  /**
+   * Access method to get the HashMap of stars with names.
+   * @return the HashMap of stars with names.
+   */
   public HashMap<String, Star> getNameHashMap() {
     return nameHashMap;
   }
 
+  /**
+   * Access method to get the output from neighbors command.
+   * @return the output from neighbors command
+   */
   public List<String> getNeighborsOutput() {
     return neighborsOutput;
   }
 
+  /**
+   * Access method to get the output from radius method.
+   * @return the output from radius method
+   */
   public List<String> getRadiusOutput() {
     return radiusOutput;
   }
@@ -71,6 +85,7 @@ public class Universe implements CommandManager.Install {
     @Override
     public void execute(List<String> tokens) {
       String fileName = tokens.get(0);
+      // Check if the filename ends in .csv
       if (!Pattern.matches(".*\\.csv", fileName)) {
         REPL.errorPrint("ERROR: Filename must end in \".csv\"");
       } else {
@@ -79,13 +94,15 @@ public class Universe implements CommandManager.Install {
         List<String> headerPattern = new ArrayList<>(List.of("StarID",
             "ProperName", "X", "Y", "Z"));
         if (content != null) {
+          // Check if header is malformed or not
           if (!content.get(0).equals(headerPattern)) {
             REPL.errorPrint("ERROR: Malformed header in csv.");
           } else if (content.size() < 2) {
-            // can pass the output to a method that returns it to gui method
+            // Pass read message and error to REPL
             REPL.print("Read 0 stars from " + fileName);
             REPL.errorPrint("ERROR: 0 stars in csv file.");
           } else {
+            // Populate the KDTree and HashMap of names
             populateUniverse(content, fileName);
           }
         }
@@ -105,15 +122,18 @@ public class Universe implements CommandManager.Install {
       for (int i = 1; i < content.size(); i++) {
         List<String> row = content.get(i);
         String joinedRow = String.join(",", row);
+        // Check if data is malformed
         if (!Pattern.matches("(\\d+),(.*)(?:,(-?\\d+(\\.\\d+)?)){3}", joinedRow)) {
           REPL.errorPrint("ERROR: Malformed data in csv");
         } else {
+          // Transform strings to their respective values
           int id = Integer.parseInt(row.get(0));
           String name = row.get(1);
           List<Number> coordinates = new ArrayList<>();
           for (int j = 0; j < 3; j++) {
             coordinates.add(j, Double.parseDouble(row.get(j + 2)));
           }
+          // Create the new star
           Star newStar = new Star(id, name, coordinates);
           listOfStars.add(newStar);
           // This puts stars with names into a HashMap with a key of names
@@ -126,6 +146,7 @@ public class Universe implements CommandManager.Install {
       if (!listOfStars.isEmpty()) {
         int numberOfStars = content.size() - 1;
         REPL.print("Read " + numberOfStars + " stars from " + fileName);
+        // Creates tree
         tree = new KDTree<>(listOfStars, 0);
       }
     }
@@ -153,14 +174,17 @@ public class Universe implements CommandManager.Install {
         String name = tokens.get(1).replace("\"", "");
         // This gets the star from the HashMap with names
         Star centerStar = nameHashMap.get(name);
+        // Check if name of a star can be found || file is loaded
         try {
           List<Number> starCoordinates = centerStar.getCoordinates();
+          // Check if star command is called before
           try {
             List<Star> nameNeighbors = tree.neighbors(k + 1, starCoordinates);
             nameNeighbors.remove(0);
             neighborsOutput = new ArrayList<>();
             if (nameNeighbors.size() != 0) {
               for (Star element : nameNeighbors) {
+                // Results
                 REPL.print(element.getId());
                 neighborsOutput.add(
                     "ID: " + element.getId() + " Name: " + element.getName()
@@ -182,10 +206,12 @@ public class Universe implements CommandManager.Install {
       // If it is an integer followed by three doubles
       } else if (tokens.size() == 4) {
         List<Number> targetPoint = createPoint(tokens.subList(1, 4));
+        // Check if star command is called before
         try {
           List<Star> coordinateNeighbors = tree.neighbors(k, targetPoint);
           neighborsOutput = new ArrayList<>();
           for (Star element : coordinateNeighbors) {
+            // Sends the results to the REPL and add to output
             REPL.print(element.getId());
             neighborsOutput.add(
                 "ID: " + element.getId() + " Name: " + element.getName()
@@ -198,13 +224,11 @@ public class Universe implements CommandManager.Install {
         }
       }
     }
-
-//    @Override
-//    public List<String> guiExecute(List<String> tokens) {
-//
-//    }
   }
 
+  /**
+   * Class for radius command.
+   */
   class RadiusCommand implements CommandManager.Command {
     /**
      * Executes the neighbors command. It can
@@ -221,9 +245,11 @@ public class Universe implements CommandManager.Install {
         // This strips away the input name's quote
         String name = tokens.get(1).replace("\"", "");
         // This gets the star from the HashMap with names
+        // Check if name is valid
         try {
           Star centerStar = nameHashMap.get(name);
           List<Number> starCoordinates = centerStar.getCoordinates();
+          // Check if file is loaded first
           try {
             List<Star> nameRadius = tree.radius(r, starCoordinates);
             nameRadius.remove(0);
@@ -251,6 +277,7 @@ public class Universe implements CommandManager.Install {
       // If it is an integer followed by three doubles
       } else if (tokens.size() == 4) {
         List<Number> targetPoint = createPoint(tokens.subList(1, 4));
+        // Check if file is loaded first
         try {
           List<Star> coordinateNeighbors = tree.radius(r, targetPoint);
           radiusOutput = new ArrayList<>();

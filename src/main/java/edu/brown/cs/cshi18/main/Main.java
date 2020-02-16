@@ -4,10 +4,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import edu.brown.cs.cshi18.repl.CommandManager;
 import edu.brown.cs.cshi18.repl.REPL;
@@ -68,7 +66,7 @@ public final class Main {
       runSparkServer((int) options.valueOf("port"));
     }
 
-    // Installs the commands in programs
+    // Installs the commands in the star program
     manager.install(universe);
     // The repl starts reading
     repl.read(manager);
@@ -117,7 +115,7 @@ public final class Main {
   }
 
   /**
-   *  A handler to print out suggestions once form is submitted.
+   *  A handler to print out neighbors results once form is submitted.
    *  @return ModelAndView to render.
    *  (stars.ftl).
    */
@@ -152,7 +150,7 @@ public final class Main {
 
 
   /**
-   *  A handler to print out suggestions once form is submitted.
+   *  A handler to print out radius results once form is submitted.
    *  @return ModelAndView to render.
    *  (stars.ftl).
    */

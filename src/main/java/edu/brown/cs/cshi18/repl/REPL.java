@@ -3,7 +3,6 @@ package edu.brown.cs.cshi18.repl;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.PrintStream;
 
 /**
  * REPL class that reads the input stream and
@@ -47,6 +46,4 @@ public class REPL {
   public static void errorPrint(Object e) {
     System.err.println(e);
   }
-
-  //public
 }

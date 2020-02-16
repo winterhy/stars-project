@@ -16,7 +16,7 @@ public class ClosestFirstDistanceComparator<T extends HasCoordinates>
   /**
    * Constructor method. Takes in a list of numbers representing the
    * coordinate of a target point to compare to.
-   * @param targetPoint
+   * @param targetPoint list of numbers representing target point
    */
   public ClosestFirstDistanceComparator(List<Number> targetPoint) {
     this.targetPoint = targetPoint;
@@ -26,9 +26,9 @@ public class ClosestFirstDistanceComparator<T extends HasCoordinates>
    * Takes in two objects that implements the HasCoordinate interface.
    * Returns a positive value if object a is further away from the targetPoint
    * than object b. Negative other way around. Zero if equal.
-   * @param a
-   * @param b
-   * @return
+   * @param a object T
+   * @param b object T
+   * @return the comparator value according to the specification above
    */
   public int compare(T a, T b) {
     return Double.compare(a.euclideanDistance(targetPoint),

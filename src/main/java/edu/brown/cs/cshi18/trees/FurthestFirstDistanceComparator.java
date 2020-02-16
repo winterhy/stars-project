@@ -16,7 +16,7 @@ public class FurthestFirstDistanceComparator<T extends HasCoordinates> implement
   /**
    * Constructor method. Takes in a list of numbers representing the
    * coordinate of a target point to compare to.
-   * @param targetPoint
+   * @param targetPoint list of numbers representing the target point
    */
   public FurthestFirstDistanceComparator(List<Number> targetPoint) {
     this.targetPoint = targetPoint;
@@ -27,9 +27,9 @@ public class FurthestFirstDistanceComparator<T extends HasCoordinates> implement
    * Returns the opposite of closest distance comparator.
    * Returns a positive value if object a is closer to the targetPoint.
    * Negative other way around. Zero if equal.
-   * @param a
-   * @param b
-   * @return
+   * @param a object T
+   * @param b object T
+   * @return return the value according to the specification above
    */
   public int compare(T a, T b) {
     return -Double.compare(a.euclideanDistance(targetPoint),

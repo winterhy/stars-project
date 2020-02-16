@@ -4,14 +4,14 @@ import java.util.Comparator;
 
 /**
  * Class to compare one specific coordinate, or axis, of a list of numbers.
- * @param <T>
+ * @param <T> an object that has coordinates
  */
 public class CoordinateComparator<T extends HasCoordinates> implements Comparator<T> {
   private int coordinate;
 
   /**
    * Constructor method. Takes in a parameter of coordinate.
-   * @param coordinate
+   * @param coordinate number representing the coordinate / index
    */
   public CoordinateComparator(int coordinate) {
     this.coordinate = coordinate;
@@ -22,8 +22,8 @@ public class CoordinateComparator<T extends HasCoordinates> implements Comparato
    * Returns a positive value if the specified coordinate is greater.
    * Negative is smaller. Zero if equal.
    *
-   * @param a
-   * @param b
+   * @param a object T
+   * @param b object T
    * @return value in accordance with compare method
    */
   public int compare(T a, T b) {

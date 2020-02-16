@@ -1,11 +1,9 @@
 package edu.brown.cs.cshi18.parser;
 
 import edu.brown.cs.cshi18.repl.REPL;
-import org.checkerframework.checker.units.qual.A;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -20,6 +18,10 @@ import java.io.IOException;
 public class CSVParser {
   private List<List<String>> parsed;
 
+  /**
+   * Access method to get the parsed list.
+   * @return the parsed list.
+   */
   public List<List<String>> getParsed() {
     return parsed;
   }
@@ -35,16 +37,18 @@ public class CSVParser {
       File csvFile = new File(fileName);
       BufferedReader reader =
           new BufferedReader(new FileReader(csvFile));
-      boolean sameNumberOfColumns = false;
       String firstLine = reader.readLine();
+      // the first line || header cannot be empty
       if (firstLine == null) {
-        REPL.errorPrint("ERROR: Empty file.");
+        REPL.errorPrint("ERROR: Empty header.");
       } else {
+        // parse the lines in the file by comma
         String[] arrayOfFirstLine = firstLine.split(",");
         List<String> firstRow = Arrays.asList(arrayOfFirstLine);
         parsed = new ArrayList<>();
         parsed.add(firstRow);
         String line;
+        // loop through each line
         while ((line = reader.readLine()) != null) {
           String[] arrayOfStrings = line.split(",");
           List<String> row = Arrays.asList(arrayOfStrings);
