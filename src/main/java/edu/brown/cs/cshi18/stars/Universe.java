@@ -162,7 +162,9 @@ public class Universe implements CommandManager.Install {
             if (nameNeighbors.size() != 0) {
               for (Star element : nameNeighbors) {
                 REPL.print(element.getId());
-                neighborsOutput.add("Star: " + element.getId());
+                neighborsOutput.add(
+                    "ID: " + element.getId() + " Name: " + element.getName()
+                    + " Coordinates: " + element.getCoordinates());
               }
             }
           } catch (NullPointerException e) {
@@ -185,7 +187,9 @@ public class Universe implements CommandManager.Install {
           neighborsOutput = new ArrayList<>();
           for (Star element : coordinateNeighbors) {
             REPL.print(element.getId());
-            neighborsOutput.add("Star: " + element.getId());
+            neighborsOutput.add(
+                "ID: " + element.getId() + " Name: " + element.getName()
+                + " Coordinates: " + element.getCoordinates());
           }
         } catch (NullPointerException e) {
           neighborsOutput = new ArrayList<>();
@@ -227,7 +231,9 @@ public class Universe implements CommandManager.Install {
             if (nameRadius.size() != 0) {
               for (Star element : nameRadius) {
                 REPL.print(element.getId());
-                radiusOutput.add("Star: " + element.getId());
+                radiusOutput.add(
+                    "ID: " + element.getId() + " Name: " + element.getName()
+                    + " Coordinates: " + element.getCoordinates());
               }
             }
           } catch (NullPointerException e) {
@@ -250,7 +256,9 @@ public class Universe implements CommandManager.Install {
           radiusOutput = new ArrayList<>();
           for (Star element : coordinateNeighbors) {
             REPL.print(element.getId());
-            radiusOutput.add("Star: " + element.getId());
+            radiusOutput.add(
+                "ID: " + element.getId() + " Name: " + element.getName()
+                + " Coordinates: " + element.getCoordinates());
           }
         } catch (NullPointerException e) {
           radiusOutput = new ArrayList<>();

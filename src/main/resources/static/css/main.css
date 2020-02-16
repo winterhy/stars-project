@@ -3,18 +3,30 @@ input[type="number"] {
 }
 
 body {
-  background-color: #1F2833;
   background-image: url("space.jpg");
 }
 
-#one {
-  color: white;
+
+.gold {
+  color: #E4A64F;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 14px;
+  font-style: normal;
+  font-variant: normal;
+  font-weight: 400;
+  line-height: 20px;
 }
 
 .title {
   text-align: center;
   color: #E4A64F;
   font-size: 100px;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+.subtitle {
+  margin: 4px;
+  color: #E4A64F;
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
@@ -28,13 +40,35 @@ body {
   line-height: 20px;
 }
 
-div {
-  border: 0.5rem outset pink;
-  outline: 0.5rem solid khaki;
-  box-shadow: 0 0 0 2rem skyblue;
-  border-radius: 12px;
-  font: bold 1rem sans-serif;
-  margin: 2rem;
-  padding: 1rem;
-  outline-offset: 0.5rem;
+.center {
+  text-align: center;
+}
+
+.left {
+  text-align: left;
+  margin: 10px 50px;
+  float: left;
+  width: 90%;
+}
+
+.right {
+  text-align: left;
+  margin: 10px 50px;
+  float: right;
+  width: 90%;
+}
+
+#wrapper {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  align-content: stretch;
+}
+
+#bgleft {
+  flex-basis: 100%;
+}
+
+#bgright {
+  flex-basis: 100%;
 }

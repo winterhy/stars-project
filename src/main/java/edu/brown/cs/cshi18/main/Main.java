@@ -108,7 +108,7 @@ public final class Main {
     @Override
     public ModelAndView handle(Request req, Response res) {
       Map<String, Object> variables = ImmutableMap.of(
-          "title", "Stars",
+          "title", "Stars: Query the database",
           "message", "Welcome to Stars.",
           "neighbors", "",
           "radius", "");
@@ -140,7 +140,7 @@ public final class Main {
       }
 
       List<String> neighborsOutput = universe.getNeighborsOutput();
-      String joinedNeighbors = String.join("\n", neighborsOutput);
+      String joinedNeighbors = String.join("<br>", neighborsOutput);
       Map<String, Object> variables = ImmutableMap.of(
           "title", "Stars",
           "message", "Welcome to Stars.",
@@ -175,7 +175,7 @@ public final class Main {
       }
 
       List<String> radiusOutput = universe.getRadiusOutput();
-      String joinedRadius = String.join("\n", radiusOutput);
+      String joinedRadius = String.join("<br>", radiusOutput);
       Map<String, Object> variables = ImmutableMap.of(
           "title", "Stars",
           "message", "Welcome to Stars.",
