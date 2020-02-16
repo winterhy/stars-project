@@ -3,7 +3,7 @@
 ## Stars
 * Known bugs
 
-  - None so far
+  - None known
   
 * Design Details
 
@@ -39,34 +39,56 @@
     furthest neighbor, it will be as if it was never there. If the current node
     isn't, then another neighbor that is the furthest will be removed.
     
-    - I use HashMaps to find stars that have names
+    - I use a HashMap to set and find stars that have names
 
 * How to run tests
 
-  - Type maven package in the command line with star-winterhy as the directory
+  - For JUnit Tests, type `mvn package` or `mvn site` in the terminal with
+   star-winterhy as the directory. For ta system tests, type
+    `./cs32-test tests/ta/stars/*` in the terminal with star-winterhy as the 
+    directory to test every ta system tests. For my own student system tests,
+    type `./cs32-test tests/student/stars/*` to test all of them.
   
 * How to run the program
 
-  - Type ./run in 
+  - Type `./run` to start the REPL without the GUI. Exit by Ctrl+D. Type
+  `./run --gui --port 4567` to run with the GUI. It will exist in
+  localhost:4567/stars
+  - The repl during GUI unfortunately does not support Ctrl+D. Ctrl+C is needed.
+  - Please first load the file in the terminal using the stars command
+   `stars filename` with filename being the path to the file.
   
-* 
+* Design Questions
 
-1. Suppose that in addition to "neighbors" and "radius" you wanted to support
+  - Question: Suppose that in addition to "neighbors" and "radius" you wanted to support
 10+ more commands. How would you change your code - particularly your repl
 parsing - to do this? Don't worry about algorithmic details with the k-d
 tree, we're interested in the design.
 
-  I would have to install more commands in classes that implement the "Install" 
+    - Answer: I would have to install more commands in classes that implement the "Install" 
 interface. I would also have to implement the new commands. I do not have to
 change my REPL or command manager.
 
-2. What are some problems you would run into if you wanted to use your k-d tree
+  - Question: What are some problems you would run into if you wanted to use your k-d tree
 to find points that are close to each other on the earth's surface? You do not
 need to explain how to solve these problems.
 
-  Hi.
+    - The surface of the Earth is curved. The KDTree uses euclidean distance to
+    compute closeness. However, that would not work on a curved surface.
+    Another coordinate system will be needed.
 
-3. Your k-d tree supports most of the methods required by the Collection
+  - Question: Your k-d tree supports most of the methods required by the Collection
 interface. What would you have to add/change to make code
 like `Collection<Star> db = new KDTree<Star>()` compile and work properly?
+
+    - My k-d tree will need to support every method that are not optional 
+    in the Collection interface and the Iterable interface. I will have to add all those methods 
+    to my code. I will not list every single method, but some useful ones are 
+    `size()` to find the number of elements in the tree. Or `contains(Object o)`
+    which will use a search method similar to `neighbors` but expanded to the 
+    entire tree.
+
+* Explanation for Checkstyle Errors
+
+  - No errors.
 
